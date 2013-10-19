@@ -1,0 +1,4 @@
+AUTOMAKE_OPTIONS = foreign
+bin_PROGRAMS = p01 p02
+p01_SOURCES = p01.cpp
+p02_SOURCES = p02.cpp
