@@ -1,0 +1,3 @@
+AUTOMAKE_OPTIONS=foreign
+bin_PROGRAMS=problem01 
+problem01_SOURCES=problem01.cpp
