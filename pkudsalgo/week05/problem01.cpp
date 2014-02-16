@@ -70,8 +70,9 @@ void MinHeap::shiftDown(int position)
 }
 void MinHeap::insert(int a_num)
 {
-    values_[current_size_++] = a_num;
+    values_[current_size_] = a_num;
     shiftUp(current_size_-1);
+    current_size_++;
 }
 
 void MinHeap::pop()
