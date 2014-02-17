@@ -76,7 +76,7 @@ POST_INSTALL = :
 NORMAL_UNINSTALL = :
 PRE_UNINSTALL = :
 POST_UNINSTALL = :
-bin_PROGRAMS = problem01$(EXEEXT)
+bin_PROGRAMS = problem01$(EXEEXT) problem02$(EXEEXT)
 subdir = .
 DIST_COMMON = $(srcdir)/Makefile.in $(srcdir)/Makefile.am \
 	$(top_srcdir)/configure $(am__configure_deps)
@@ -94,6 +94,9 @@ PROGRAMS = $(bin_PROGRAMS)
 am_problem01_OBJECTS = problem01.$(OBJEXT)
 problem01_OBJECTS = $(am_problem01_OBJECTS)
 problem01_LDADD = $(LDADD)
+am_problem02_OBJECTS = problem02.$(OBJEXT)
+problem02_OBJECTS = $(am_problem02_OBJECTS)
+problem02_LDADD = $(LDADD)
 AM_V_P = $(am__v_P_$(V))
 am__v_P_ = $(am__v_P_$(AM_DEFAULT_VERBOSITY))
 am__v_P_0 = false
@@ -122,7 +125,7 @@ AM_V_CXXLD = $(am__v_CXXLD_$(V))
 am__v_CXXLD_ = $(am__v_CXXLD_$(AM_DEFAULT_VERBOSITY))
 am__v_CXXLD_0 = @echo "  CXXLD   " $@;
 am__v_CXXLD_1 = 
-SOURCES = $(problem01_SOURCES)
+SOURCES = $(problem01_SOURCES) $(problem02_SOURCES)
 am__can_run_installinfo = \
   case $$AM_UPDATE_INFO_DIR in \
     n|no|NO) false;; \
@@ -237,6 +240,7 @@ top_builddir = .
 top_srcdir = .
 AUTOMAKE_OPTIONS = foreign
 problem01_SOURCES = problem01.cpp
+problem02_SOURCES = problem02.cpp
 all: all-am
 
 .SUFFIXES:
@@ -321,6 +325,10 @@ clean-binPROGRAMS:
 problem01$(EXEEXT): $(problem01_OBJECTS) $(problem01_DEPENDENCIES) $(EXTRA_problem01_DEPENDENCIES) 
 	@rm -f problem01$(EXEEXT)
 	$(AM_V_CXXLD)$(CXXLINK) $(problem01_OBJECTS) $(problem01_LDADD) $(LIBS)
+
+problem02$(EXEEXT): $(problem02_OBJECTS) $(problem02_DEPENDENCIES) $(EXTRA_problem02_DEPENDENCIES) 
+	@rm -f problem02$(EXEEXT)
+	$(AM_V_CXXLD)$(CXXLINK) $(problem02_OBJECTS) $(problem02_LDADD) $(LIBS)
 
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT)
