@@ -104,32 +104,46 @@ int MinHeap::top()
     else
         return -1;
 }
-    
+
+void takeOneTest()
+{
+    int num_count;
+    cin>>num_count;
+    MinHeap heap;
+    for(int i=0;i<num_count;i++)
+    {
+        int num;
+        cin>>num;
+        heap.insert(num);     
+    }
+    //heap.printHeap();
+    int total_sum = 0;
+    while(heap.currentSize()>=2)
+    {
+        int min1 = heap.top();
+        heap.pop();
+
+        int min2 = heap.top(); 
+        heap.pop();
+
+        int current_sum = min1 + min2;
+        total_sum+=current_sum;
+        heap.insert(current_sum);
+        //heap.printHeap();
+    }
+
+    cout<<total_sum<<endl;
+}
+
 int main()
 {
-    int test_count;
-    cin>>test_count;
-    while(test_count--)
+    int count;
+    cin>>count;
+    while(count--)
     {
-        MinHeap heap;
-        int oper_count;
-        cin>>oper_count;
-        while(oper_count--)
-        {
-            int type;
-            cin>>type;
-            if(type==1)
-            {
-                int u;
-                cin>>u;
-                heap.insert(u);
-            }
-            if(type==2)
-            {
-                cout<<heap.top()<<endl;
-                heap.pop();
-            }
-        }
+        takeOneTest();
     }
     return 0;
 }
+    
+
