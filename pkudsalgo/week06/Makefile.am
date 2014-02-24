@@ -1,3 +1,4 @@
 AUTOMAKE_OPTIONS=foreign
-bin_PROGRAMS=problem01
+bin_PROGRAMS=problem01 problem03
 problem01_SOURCES=problem01.cpp
+problem03_SOURCES=problem03.cpp
