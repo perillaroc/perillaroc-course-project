@@ -45,16 +45,17 @@ public:
         }
     }
     
-    TreeNode* find()
+    TreeNode* find(string value_to_find)
     {
         stack<TreeNode*> s;
         if(root==NULL)
-            return;
+            return NULL;
         s.push(root);
         while(!s.empty())
         {
             TreeNode* p = s.top();
-            cout<<p->value<<endl;
+            if(p->value == value_to_find)
+                return p;
             s.pop();
             if(p->next_sibling)
             {
@@ -65,6 +66,7 @@ public:
                 s.push(p->first_child);
             }
         }
+        return NULL;
     }
     TreeNode* root;
 };
@@ -102,12 +104,26 @@ void doOneTest()
             p1->next_sibling = p2;
             p1 = p2;
         }
-        cout<<str<<endl;
         getline(cin, str);
     }
     
     getline(cin, str);
     string value_to_find = str;
+    TreeNode* node = tree.find(value_to_find);
+    string output;
+    if(node)
+    {
+        node = node->next_sibling;
+        while(node)
+        {
+            output+=node->value;
+            node = node->next_sibling;
+        }
+    }
+    else
+    {
+        output = "No";
+    }
 
     getline(cin,str);
     if(!str.empty())
@@ -122,7 +138,7 @@ void doOneTest()
        return;
     }
 
-    tree.preOrderVisit();
+    cout<<output<<endl;
 
 }
 
@@ -138,6 +154,10 @@ int main()
     {
         doOneTest();
     }
-    
+    getline(cin,str);
+    if(str!="!")
+    {
+        cerr<<"ERROR"<<endl;
+    }
     return 0;
 }
