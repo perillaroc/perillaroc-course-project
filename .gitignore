@@ -34,3 +34,5 @@ autoscan.log
 config.log
 config.status
 .deps
+
+.idea
