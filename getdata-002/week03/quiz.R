@@ -16,3 +16,12 @@ question04<-function(){
   q4_nona<- q4[!is.na(q4$Gross.domestic.product.2012),]
   tapply(q4_nona$Gross.domestic.product.2012, q4_nona$Income.Group,mean)
 }
+
+question05<-function(){
+  q5_gdp<-read.csv("question03-GDP.csv",header=TRUE)
+  q5_edu<-read.csv("question03-Country.csv",header=TRUE)
+  q5<-merge(q5_gdp,q5_edu,by.x="X",by.y="CountryCode",all=TRUE)
+  q5_nona<- q5[!is.na(q5$Gross.domestic.product.2012),]
+  q5004<-q5_nona[order(q5_nona$Gross.domestic.product.2012),]
+  which(q3004[1:38,"Income.Group"]=="Lower middle income")
+}
