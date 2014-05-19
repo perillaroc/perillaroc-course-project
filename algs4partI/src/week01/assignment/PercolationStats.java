@@ -1,35 +1,32 @@
-import java.lang.IllegalArgumentException;
-
 public class PercolationStats {
-
-    double[] th;
-    int n;
-    int t;
+    private double[] th;
+    private int n;
+    private int t;
     // perform T independent computational experiments on an N-by-N grid
     public PercolationStats(int N, int T)
     {
         n = N;
         t = T;
         th = new double[t];
-        for(int i=0;i<t;i++)
+        for (int i=0; i < t; i++)
         {
             Percolation percolation = new Percolation(n);
-            int count=0;
-            while(!percolation.percolates())
+            int count = 0;
+            while (!percolation.percolates())
             {
-                int p1_i=StdRandom.uniform(N);
-                int p1_j=StdRandom.uniform(N);
+                int p1i = StdRandom.uniform(1, N+1);
+                int p1j = StdRandom.uniform(1, N+1);
 
-                while(percolation.isOpen(p1_i,p1_j))
+                while (percolation.isOpen(p1i, p1j))
                 {
-                    p1_i=StdRandom.uniform(N);
-                    p1_j=StdRandom.uniform(N);
+                    p1i = StdRandom.uniform(1, N+1);
+                    p1j = StdRandom.uniform(1, N+1);
                 }
 
-                percolation.open(p1_i,p1_j);
+                percolation.open(p1i, p1j);
                 count++;
             }
-            th[i] = (double)(count) / (n*n);
+            th[i] = (double) (count) / (n*n);
         }
     }
     // sample mean of percolation threshold
@@ -65,10 +62,10 @@ public class PercolationStats {
     {
         int n = Integer.parseInt(args[0]);
         int t = Integer.parseInt(args[1]);
-        if(n<=0 || t<=0)
+        if (n <= 0 || t <= 0)
             throw new IllegalArgumentException();
 
-        PercolationStats ps = new PercolationStats(n,t);
+        PercolationStats ps = new PercolationStats(n, t);
 
         StdOut.printf("mean                    = %f\n", ps.mean());
         StdOut.printf("stddev                  = %.17f\n", ps.stddev());

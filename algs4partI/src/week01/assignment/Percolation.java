@@ -1,5 +1,3 @@
-import java.lang.IndexOutOfBoundsException;
-
 public class Percolation {
     private WeightedQuickUnionUF uf;
     private int[] status;
@@ -9,37 +7,55 @@ public class Percolation {
     {
         n = N;
         uf = new WeightedQuickUnionUF(N*N+2);
-        for(int i=0;i<n;i++)
-        {
-            uf.union(i,N*N);
-            uf.union((N-1)*N+i,N*N+1);
-        }
         status = new int[N*N+2];
-        for(int i=0;i<status.length;i++)
-            status[i]=0;
+
+        for (int i = 0; i < status.length; i++)
+            status[i] = 0;
+
+        status[N*N] = 1;
     }
 
     // open site (row i, column j) if it is not already
     public void open(int i, int j)
     {
-        if(i>=n || i<0 || j>=n || j<0)
-            throw new IndexOutOfBoundsException();
-        int p1 = i*n + j;
+        if (i > n || i <= 0)
+            throw new IndexOutOfBoundsException("row index i out of bounds");
+        if (j > n || j <= 0)
+            throw new IndexOutOfBoundsException("col index j out of bounds");
+
+        int p1 = (i-1)*n + (j-1);
         status[p1] = 1;
-        if(i>0 && isOpen(i-1,j))
-        {   int p2 = (i-1)*n+j;
+
+        if (i == 1)
+        {
+            uf.union(p1, n*n);
+        }
+
+        if (i == n)
+        {
+            uf.union(p1, n*n+1);
+        }
+
+        if (i > 1 && isOpen(i-1, j))
+        {
+            int p2 = p1-n;
             uf.union(p1, p2);
         }
-        if(i<n-1 && isOpen(i+1,j))
-        {   int p2 = (i+1)*n+j;
+
+        if (i < n && isOpen(i+1, j))
+        {
+            int p2 = p1+n;
             uf.union(p1, p2);
         }
-        if(j>0 && isOpen(i,j-1))
-        {   int p2 = (i)*n+j-1;
+
+        if (j > 1 && isOpen(i, j-1))
+        {
+            int p2 = p1-1;
             uf.union(p1, p2);
         }
-        if(j<n-1 && isOpen(i,j+1))
-        {   int p2 = i*n+j+1;
+        if (j < n && isOpen(i, j+1))
+        {
+            int p2 = p1+1;
             uf.union(p1, p2);
         }
     }
@@ -47,17 +63,20 @@ public class Percolation {
     // is site (row i, column j) open?
     public boolean isOpen(int i, int j)
     {
-        if(i>=n || i<0 || j>=n || j<0)
-            throw new IndexOutOfBoundsException();
-        return status[i*n+j]>0;
+        if (i > n || i <= 0)
+            throw new IndexOutOfBoundsException("row index i out of bounds");
+        if (j > n || j <= 0)
+            throw new IndexOutOfBoundsException("col index j out of bounds");
+
+        return status[(i-1)*n+j-1]>0;
     }
 
     // is site (row i, column j) full?
     public boolean isFull(int i, int j)
     {
-        if(!isOpen(i,j))
+        if (!isOpen(i, j))
             return false;
-        int index = i*n+j;
+        int index = (i-1)*n+j-1;
         return uf.connected(index,n*n);
     }
 
