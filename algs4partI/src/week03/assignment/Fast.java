@@ -2,6 +2,13 @@ import java.util.Arrays;
 
 public class Fast {
     public static void main(String[] args){
+
+        // rescale coordinates and turn on animation mode
+        StdDraw.setXscale(0, 32768);
+        StdDraw.setYscale(0, 32768);
+        StdDraw.show(0);
+        StdDraw.setPenRadius(0.01);  // make the points a bit larger
+
         String filename = args[0];
         In in = new In(filename);
         int N = in.readInt();
@@ -13,7 +20,12 @@ public class Fast {
             Point p = new Point(x, y);
             point_array[i] = p;
             work_array[i] = p;
+            p.draw();
         }
+        StdDraw.show(0);
+
+        // reset the pen radius
+        StdDraw.setPenRadius();
 
         Arrays.sort(point_array, 0, N);
 
@@ -45,6 +57,7 @@ public class Fast {
                             StdOut.printf(" -> %s", work_array[j]);
                         }
                         StdOut.println();
+                        p.drawTo(work_array[cur_index-1]);
                     }
                     slope = cur_slope;
                     count = 1;
@@ -60,9 +73,13 @@ public class Fast {
                     StdOut.printf(" -> %s", work_array[j]);
                 }
                 StdOut.println();
+                p.drawTo(work_array[cur_index-1]);
             }
 
         }
+
+        // display to screen all at once
+        StdDraw.show(0);
 
     }
 }

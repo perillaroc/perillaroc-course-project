@@ -2,6 +2,14 @@ import java.util.Arrays;
 
 public class Brute {
     public static void main(String[] args){
+
+        // rescale coordinates and turn on animation mode
+        StdDraw.setXscale(0, 32768);
+        StdDraw.setYscale(0, 32768);
+        StdDraw.show(0);
+        StdDraw.setPenRadius(0.01);  // make the points a bit larger
+
+
         String filename = args[0];
         In in = new In(filename);
         int N = in.readInt();
@@ -11,7 +19,12 @@ public class Brute {
             int y = in.readInt();
             Point p = new Point(x, y);
             point_array[i] = p;
+            p.draw();
         }
+        StdDraw.show(0);
+
+        // reset the pen radius
+        StdDraw.setPenRadius();
 
         Arrays.sort(point_array, 0, N);
 
@@ -32,9 +45,16 @@ public class Brute {
                                     point_array[i2].toString(),
                                     point_array[i3].toString(),
                                     point_array[i4].toString());
+                            point_array[i1].drawTo(point_array[i4]);
+
                         }
                     }
                 }
+
+        // display to screen all at once
+        StdDraw.show(0);
+
+
     }
 
 }
