@@ -31,16 +31,16 @@ public class Fast {
 
         for(int i1=0;i1<=N-4;i1++) {
             // copy array to work array
-            for(int i = i1; i<N; i++)
+            for(int i = 0; i<N; i++)
             {
                 work_array[i] = point_array[i];
             }
             Point p = point_array[i1];
 
-            Arrays.sort(work_array, i1+1, N, p.SLOPE_ORDER);
+            Arrays.sort(work_array, 0, N, p.SLOPE_ORDER);
 
             int count = 0;
-            int cur_index = i1+1;
+            int cur_index = 0;
             double slope = p.slopeTo(work_array[cur_index]);
             while(cur_index<N)
             {
@@ -50,14 +50,25 @@ public class Fast {
                 else{
                     if(count>=3)
                     {
-                        // print the list
-                        StdOut.printf("%s", p);
+                        //check if p is the first point
+                        boolean flag = true;
                         for(int j = cur_index-count; j<cur_index; j++)
                         {
-                            StdOut.printf(" -> %s", work_array[j]);
+                            if(p.compareTo(work_array[j])>0){
+                                flag = false;
+                                break;
+                            }
                         }
-                        StdOut.println();
-                        p.drawTo(work_array[cur_index-1]);
+                        // print the list
+                        if(flag){
+                            StdOut.printf("%s", p);
+                            for(int j = cur_index-count; j<cur_index; j++)
+                            {
+                                StdOut.printf(" -> %s", work_array[j]);
+                            }
+                            StdOut.println();
+                            p.drawTo(work_array[cur_index-1]);
+                        }
                     }
                     slope = cur_slope;
                     count = 1;
@@ -66,14 +77,24 @@ public class Fast {
             }
             if(count>=3)
             {
-                // print the list
-                StdOut.printf("%s", p);
+                boolean flag = true;
                 for(int j = cur_index-count; j<cur_index; j++)
                 {
-                    StdOut.printf(" -> %s", work_array[j]);
+                    if(p.compareTo(work_array[j])>0){
+                        flag = false;
+                        break;
+                    }
                 }
-                StdOut.println();
-                p.drawTo(work_array[cur_index-1]);
+                // print the list
+                if(flag){
+                    StdOut.printf("%s", p);
+                    for(int j = cur_index-count; j<cur_index; j++)
+                    {
+                        StdOut.printf(" -> %s", work_array[j]);
+                    }
+                    StdOut.println();
+                    p.drawTo(work_array[cur_index-1]);
+                }
             }
 
         }
