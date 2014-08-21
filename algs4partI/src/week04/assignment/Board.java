@@ -5,8 +5,12 @@ public class Board {
     // construct a board from an N-by-N array of blocks
     // (where blocks[i][j] = block in row i, column j)
     public Board(int[][] blocks){
-        blocks_ = blocks;
-        N = blocks_.length;
+        N = blocks.length;
+        blocks_ = new int[N][N];
+        for(int i=0;i<N;i++)
+            for(int j=0;j<N;j++)
+                blocks_[i][j] = blocks[i][j];
+
     }
 
     // board dimension N
@@ -70,7 +74,7 @@ public class Board {
     public Board twin(){
         int i=0;
         int j=0;
-        if(blocks_[0][0] ==0 || blocks_[0][0] ==0 || blocks_[0][1] == 0){
+        if(blocks_[0][0] ==0 || blocks_[0][1] ==0 || blocks_[0][2] == 0){
             i=1;
         }
         int[][] values = new int[N][N];

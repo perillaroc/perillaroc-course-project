@@ -87,6 +87,8 @@ public class Solver {
 
     // sequence of boards in a shortest solution; null if no solution
     public Iterable<Board> solution() {
+        if(!isSolvable())
+            return null;
         Stack<Board> board_seq = new Stack<Board>();
         SolverStep step = solver_step_;
         while(step != null) {
