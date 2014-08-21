@@ -33,17 +33,15 @@ public class Board {
     // sum of Manhattan distances between blocks and goal
     public int manhattan(){
         int total = 0;
-        int n = dimension();
-        for(int i=0;i<n;i++) {
-            for (int j = 0; j < n; j++) {
+        for(int i=0;i<N;i++) {
+            for (int j = 0; j < N; j++) {
                 int val = blocks_[i][j];
                 int end_i,end_j;
                 if(val == 0){
-                    end_i = n-1;
-                    end_j = n-1;
+                    continue;
                 } else {
-                    end_i = val%n;
-                    end_j = val - end_i*n;
+                    end_i = (val-1)/N;
+                    end_j = (val-1)%N;
                 }
                 total+= Math.abs(end_i - i) + Math.abs(end_j - j);
             }
@@ -54,14 +52,16 @@ public class Board {
     // is this board the goal board?
     public boolean isGoal(){
         boolean flag = true;
-        int n = dimension();
-        for(int i=0; i<n; i++){
-            for(int j=0;j<n;j++){
-                if(blocks_[i][j] != i*n + j) {
+        for(int i=0; i<N; i++){
+            for(int j=0;j<N;j++){
+                if(i==N-1 && j==N-1 ) continue;
+                if(blocks_[i][j] != i*N + j + 1) {
                     flag = false;
                     break;
                 }
             }
+            if(!flag)
+                break;
         }
         return flag;
     }
@@ -74,6 +74,9 @@ public class Board {
             i=1;
         }
         int[][] values = new int[N][N];
+        for(int x=0;x<N;x++)
+            for(int y=0;y<N;y++)
+                values[x][y] = blocks_[x][y];
         int temp = values[i][j];
         values[i][j] = values[i][j+1];
         values[i][j+1] = temp;
@@ -103,11 +106,16 @@ public class Board {
     // all neighboring boards
     public Iterable<Board> neighbors(){
         int i=0,j=0;
-        for(i=0;i<N;i++) {
+        boolean flag = false;
+        for(i=0;i<N ;i++) {
             for(j=0;j<N;j++) {
-                if(blocks_[i][j]==0)
+                if(blocks_[i][j]==0) {
+                    flag = true;
                     break;
+                }
             }
+            if(flag)
+                break;
         }
 
         Queue<Board> queue = new Queue<Board>();
