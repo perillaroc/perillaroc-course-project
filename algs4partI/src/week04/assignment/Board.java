@@ -1,5 +1,5 @@
 public class Board {
-    public int[][] blocks_;
+    private int[][] blocks_;
     private int N;
 
     // construct a board from an N-by-N array of blocks

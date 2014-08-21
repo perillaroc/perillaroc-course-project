@@ -7,7 +7,7 @@ public class Solver {
     private MinPQ<SolverStep> twin_pq_ = new MinPQ<SolverStep>();
     private boolean is_solvable_ = false;
 
-    class SolverStep implements Comparable<SolverStep>{
+    private class SolverStep implements Comparable<SolverStep>{
         public Board board_;
         public SolverStep parent_;
         public int moves_;
