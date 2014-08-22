@@ -1,72 +1,112 @@
 public class Solver {
-    private Board initial_board_;
-    private MinPQ<SolverStep> origin_pq_ = new MinPQ<SolverStep>();
-    private SolverStep solver_step_ = null;
+    private Board initialBoard;
+    private MinPQ<SolverStep> originPQ = new MinPQ<SolverStep>();
+    private SolverStep solverStep = null;
 
-    private Board twin_board_;
-    private MinPQ<SolverStep> twin_pq_ = new MinPQ<SolverStep>();
-    private boolean is_solvable_ = false;
+    private Board twinBoard;
+    private MinPQ<SolverStep> twinPQ = new MinPQ<SolverStep>();
+    private boolean isSolvable = false;
 
-    private class SolverStep implements Comparable<SolverStep>{
-        public Board board_;
-        public SolverStep parent_;
-        public int moves_;
-        public int manhattan_;
-        public int priority_;
-        public SolverStep(Board board, int moves, SolverStep parent){
-            board_ = board;
-            parent_ = parent;
-            moves_ = moves;
-            manhattan_ = board_.manhattan();
-            priority_ = moves_ + manhattan_;
+    private class SolverStep implements Comparable<SolverStep> {
+        private Board stepBoard;
+        private SolverStep stepParent;
+        private int stepMoves;
+        private int stepManhattan;
+        private int stepPriority;
+
+        public SolverStep(Board board, int moves, SolverStep parent) {
+            stepBoard = board;
+            stepParent = parent;
+            stepMoves = moves;
+            stepManhattan = stepBoard.manhattan();
+            stepPriority = stepMoves + stepManhattan;
         }
 
-        public int compareTo(SolverStep that){
-            if( this.priority_ < that.priority_) return -1;
-            if( this.priority_ > that.priority_) return 1;
+        public Board getStepBoard() {
+            return stepBoard;
+        }
+
+        public void setStepBoard(Board board) {
+            this.stepBoard = board;
+        }
+
+        public SolverStep getStepParent() {
+            return stepParent;
+        }
+
+        public void setStepParent(SolverStep parent) {
+            this.stepParent = parent;
+        }
+
+        public int getStepMoves() {
+            return stepMoves;
+        }
+
+        public void setStepMoves(int moves) {
+            this.stepMoves = moves;
+        }
+
+        public int getStepManhattan() {
+            return stepManhattan;
+        }
+
+        public void setStepManhattan(int manhattan) {
+            this.stepManhattan = manhattan;
+        }
+
+        public int getStepPriority() {
+            return stepPriority;
+        }
+
+        public void setStepPriority(int priority) {
+            this.stepPriority = priority;
+        }
+
+        public int compareTo(SolverStep that) {
+            if (this.stepPriority < that.stepPriority) return -1;
+            if (this.stepPriority > that.stepPriority) return 1;
             return 0;
         }
     }
 
     // find a solution to the initial board (using the A* algorithm)
-    public Solver(Board initial){
-        initial_board_ = initial;
-        twin_board_ = initial_board_.twin();
-        SolverStep origin_step = new SolverStep(initial_board_, 0, null);
-        origin_pq_.insert(origin_step);
-        SolverStep twin_step = new SolverStep(twin_board_, 0, null);
-        twin_pq_.insert(twin_step);
+    public Solver(Board initial) {
+        initialBoard = initial;
+        twinBoard = initialBoard.twin();
+        SolverStep originStep = new SolverStep(initialBoard, 0, null);
+        originPQ.insert(originStep);
+        SolverStep twinStep = new SolverStep(twinBoard, 0, null);
+        twinPQ.insert(twinStep);
 
         // A* algorithm
-        while(true){
-            SolverStep current_origin_step = origin_pq_.delMin();
-            //StdOut.println(current_origin_step.board_.toString());
-            //StdOut.println(current_origin_step.priority_);
-            if(current_origin_step.board_.isGoal()){
-                is_solvable_ = true;
-                solver_step_ = current_origin_step;
+        while (true) {
+            SolverStep currentOriginStep = originPQ.delMin();
+            //StdOut.println(currentOriginStep.stepBoard.toString());
+            //StdOut.println(currentOriginStep.stepPriority);
+            if (currentOriginStep.stepBoard.isGoal()) {
+                isSolvable = true;
+                solverStep = currentOriginStep;
                 break;
             } else {
-                for (Board board : current_origin_step.board_.neighbors()) {
-                    SolverStep a_new_step = new SolverStep(board,
-                            current_origin_step.moves_+1,
-                            current_origin_step);
-                    if (a_new_step != current_origin_step.parent_)
-                        origin_pq_.insert(a_new_step);
+                for (Board board : currentOriginStep.stepBoard.neighbors()) {
+                    SolverStep newStep = new SolverStep(board,
+                            currentOriginStep.stepMoves +1,
+                            currentOriginStep);
+                    if (newStep != currentOriginStep.stepParent)
+                        originPQ.insert(newStep);
                 }
             }
 
-            SolverStep current_twin_step = twin_pq_.delMin();
-            if(current_twin_step.board_.isGoal())
-            {
+            SolverStep currentTwinStep = twinPQ.delMin();
+            if (currentTwinStep.stepBoard.isGoal()) {
                 break;
             } else {
-                for (Board board : current_twin_step.board_.neighbors()) {
-                    SolverStep a_new_step = new SolverStep(board,
-                            current_twin_step.moves_+1,
-                            current_twin_step);
-                    if (a_new_step != current_origin_step.parent_)
-                        twin_pq_.insert(a_new_step);
+                for (Board board : currentTwinStep.stepBoard.neighbors()) {
+                    SolverStep newStep = new SolverStep(board,
+                            currentTwinStep.stepMoves +1,
+                            currentTwinStep);
+                    if (newStep != currentOriginStep.stepParent)
+                        twinPQ.insert(newStep);
                 }
             }
         }
@@ -75,27 +115,27 @@ public class Solver {
 
     // is the initial board solvable?
     public boolean isSolvable() {
-        return is_solvable_;
+        return isSolvable;
     }
 
     // min number of moves to solve initial board; -1 if no solution
     public int moves() {
-        if(!isSolvable())
+        if (!isSolvable())
             return -1;
-        return solver_step_.moves_;
+        return solverStep.stepMoves;
     }
 
     // sequence of boards in a shortest solution; null if no solution
     public Iterable<Board> solution() {
-        if(!isSolvable())
+        if (!isSolvable())
             return null;
-        Stack<Board> board_seq = new Stack<Board>();
-        SolverStep step = solver_step_;
-        while(step != null) {
-            board_seq.push(step.board_);
-            step = step.parent_;
+        Stack<Board> boardSeq = new Stack<Board>();
+        SolverStep step = solverStep;
+        while (step != null) {
+            boardSeq.push(step.stepBoard);
+            step = step.stepParent;
         }
-        return board_seq;
+        return boardSeq;
     }
 
     // solve a slider puzzle (given below)

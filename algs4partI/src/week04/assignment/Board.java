@@ -1,32 +1,32 @@
 public class Board {
-    private int[][] blocks_;
+    private int[][] tails;
     private int N;
 
     // construct a board from an N-by-N array of blocks
     // (where blocks[i][j] = block in row i, column j)
-    public Board(int[][] blocks){
+    public Board(int[][] blocks) {
         N = blocks.length;
-        blocks_ = new int[N][N];
-        for(int i=0;i<N;i++)
-            for(int j=0;j<N;j++)
-                blocks_[i][j] = blocks[i][j];
+        tails = new int[N][N];
+        for (int i = 0; i < N; i++)
+            for (int j = 0; j < N; j++)
+                tails[i][j] = blocks[i][j];
 
     }
 
     // board dimension N
-    public int dimension(){
+    public int dimension() {
         return N;
     }
 
     // number of blocks out of place
-    public int hamming(){
+    public int hamming() {
         int total = 0;
         int n = dimension();
-        for(int i=0;i<n;i++) {
+        for (int i = 0; i < n; i++) {
             for (int j = 0; j < n; j++) {
-                if( i==n-1 && j==n-1)
+                if (i == n-1 && j == n-1)
                     continue;
-                if(blocks_[i][j] != i*n + j + 1) {
+                if (tails[i][j] != i*n + j + 1) {
                     total++;
                 }
             }
@@ -35,52 +35,57 @@ public class Board {
     }
 
     // sum of Manhattan distances between blocks and goal
-    public int manhattan(){
+    public int manhattan() {
         int total = 0;
-        for(int i=0;i<N;i++) {
+        for (int i = 0; i < N; i++) {
             for (int j = 0; j < N; j++) {
-                int val = blocks_[i][j];
-                int end_i,end_j;
-                if(val == 0){
+                int val = tails[i][j];
+                int correctPositionOfi, correctPositionOfj;
+                if (val == 0) {
                     continue;
                 } else {
-                    end_i = (val-1)/N;
-                    end_j = (val-1)%N;
+                    correctPositionOfi = (val-1)/N;
+                    correctPositionOfj = (val-1) % N;
                 }
-                total+= Math.abs(end_i - i) + Math.abs(end_j - j);
+                total += Math.abs(correctPositionOfi - i)
+                        + Math.abs(correctPositionOfj - j);
             }
         }
         return total;
     }
 
     // is this board the goal board?
-    public boolean isGoal(){
+    public boolean isGoal() {
         boolean flag = true;
-        for(int i=0; i<N; i++){
-            for(int j=0;j<N;j++){
-                if(i==N-1 && j==N-1 ) continue;
-                if(blocks_[i][j] != i*N + j + 1) {
+        for (int i = 0; i < N; i++) {
+            for (int j = 0; j < N; j++) {
+                if (i == N-1 && j == N-1) continue;
+                if (tails[i][j] != i*N + j + 1) {
                     flag = false;
                     break;
                 }
             }
-            if(!flag)
+            if (!flag)
                 break;
         }
         return flag;
     }
 
     // a board obtained by exchanging two adjacent blocks in the same row
-    public Board twin(){
-        int i=0;
-        int j=0;
-        if(blocks_[0][0] ==0 || blocks_[0][1] ==0 || blocks_[0][2] == 0){
-            i=1;
+    public Board twin() {
+        int i = 0;
+        int j = 0;
+        for (int x = 0; x < N; x++) {
+            if (tails[i][x] == 0)
+                break;
+        }
+        if (j != N) {
+            i = 1;
         }
         int[][] values = new int[N][N];
-        for(int x=0;x<N;x++)
-            for(int y=0;y<N;y++)
-                values[x][y] = blocks_[x][y];
+        for (int x = 0; x < N; x++)
+            for (int y = 0; y < N; y++)
+                values[x][y] = tails[x][y];
         int temp = values[i][j];
         values[i][j] = values[i][j+1];
         values[i][j+1] = temp;
@@ -88,17 +93,17 @@ public class Board {
     }
 
     // does this board equal y?
-    public boolean equals(Object y){
-        if(this == y) return true;
-        if(y == null) return false;
-        if(this.getClass() != y.getClass()) return false;
-        Board another_board = (Board)y;
+    public boolean equals(Object y) {
+        if (this == y) return true;
+        if (y == null) return false;
+        if (this.getClass() != y.getClass()) return false;
+        Board anotherBoard = (Board) y;
         int n = this.dimension();
-        if(n != ((Board) y).dimension()) return false;
+        if (n != ((Board) y).dimension()) return false;
         boolean flag = true;
-        for(int i=0; i<n; i++){
-            for(int j=0;j<n;j++){
-                if(blocks_[i][j] != another_board.blocks_[i][j] ) {
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                if (tails[i][j] != anotherBoard.tails[i][j]) {
                     flag = false;
                     break;
                 }
@@ -108,56 +113,56 @@ public class Board {
     }
 
     // all neighboring boards
-    public Iterable<Board> neighbors(){
-        int i=0,j=0;
+    public Iterable<Board> neighbors() {
+        int i = 0, j = 0;
         boolean flag = false;
-        for(i=0;i<N ;i++) {
-            for(j=0;j<N;j++) {
-                if(blocks_[i][j]==0) {
+        for (i = 0; i < N; i++) {
+            for (j = 0; j < N; j++) {
+                if (tails[i][j] == 0) {
                     flag = true;
                     break;
                 }
             }
-            if(flag)
+            if (flag)
                 break;
         }
 
         Queue<Board> queue = new Queue<Board>();
-        if(i > 0) {
+        if (i > 0) {
             int[][] values = new int[N][N];
-            for(int x=0;x<N;x++)
-                for(int y=0;y<N;y++)
-                    values[x][y] = blocks_[x][y];
+            for (int x = 0; x < N; x++)
+                for (int y = 0; y < N; y++)
+                    values[x][y] = tails[x][y];
             int temp = values[i-1][j];
             values[i-1][j] = values[i][j];
             values[i][j] = temp;
             queue.enqueue(new Board(values));
         }
-        if(i < N-1) {
+        if (i < N-1) {
             int[][] values = new int[N][N];
-            for(int x=0;x<N;x++)
-                for(int y=0;y<N;y++)
-                    values[x][y] = blocks_[x][y];
+            for (int x = 0; x < N; x++)
+                for (int y = 0; y < N; y++)
+                    values[x][y] = tails[x][y];
             int temp = values[i+1][j];
             values[i+1][j] = values[i][j];
             values[i][j] = temp;
             queue.enqueue(new Board(values));
         }
-        if(j > 0) {
+        if (j > 0) {
             int[][] values = new int[N][N];
-            for(int x=0;x<N;x++)
-                for(int y=0;y<N;y++)
-                    values[x][y] = blocks_[x][y];
+            for (int x = 0; x < N; x++)
+                for (int y = 0; y < N; y++)
+                    values[x][y] = tails[x][y];
             int temp = values[i][j-1];
             values[i][j-1] = values[i][j];
             values[i][j] = temp;
             queue.enqueue(new Board(values));
         }
-        if(j < N-1) {
+        if (j < N-1) {
             int[][] values = new int[N][N];
-            for(int x=0;x<N;x++)
-                for(int y=0;y<N;y++)
-                    values[x][y] = blocks_[x][y];
+            for (int x = 0; x < N; x++)
+                for (int y = 0; y < N; y++)
+                    values[x][y] = tails[x][y];
             int temp = values[i][j+1];
             values[i][j+1] = values[i][j];
             values[i][j] = temp;
@@ -173,7 +178,7 @@ public class Board {
         s.append(N + "\n");
         for (int i = 0; i < N; i++) {
             for (int j = 0; j < N; j++) {
-                s.append(String.format("%2d ", blocks_[i][j]));
+                s.append(String.format("%2d ", tails[i][j]));
             }
             s.append("\n");
         }
