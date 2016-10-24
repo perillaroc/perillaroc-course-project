@@ -1,4 +1,8 @@
 import java.util.Arrays;
+import edu.princeton.cs.algs4.In;
+import edu.princeton.cs.algs4.StdIn;
+import edu.princeton.cs.algs4.StdOut;
+
 
 public class BinarySearch {
     public static int rank(int key, int[] a){
@@ -20,7 +24,7 @@ public class BinarySearch {
 
 
     public static void main(String[] args){
-        int[] whitelist = In.readInts(args[0]);
+        int[] whitelist = new In(args[0]).readAllInts();
 
         Arrays.sort(whitelist);
 
